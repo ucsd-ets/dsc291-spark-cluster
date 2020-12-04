@@ -57,6 +57,7 @@ spec:
           persistentVolumeClaim:
             claimName: teams
       securityContext:
+        runAsUser: $K8S_UID
         runAsGroup: $K8S_GID
         fsGroup: $K8S_GID
 ---
@@ -147,6 +148,7 @@ spec:
           persistentVolumeClaim:
             claimName: teams
       securityContext:
+        runAsUser: $K8S_UID
         runAsGroup: $K8S_GID
         fsGroup: $K8S_GID
 ---
