@@ -17,12 +17,11 @@ EOM
 	echo "Done" >&2
 	if [ -z "$K8S_GROUPNAME" ]; then
 		NUMGROUPS=$( echo "$JSON" | jq '.teams | length' )
-		echo $NUMGROUPS
-        	if [[ $NUMGROUPS == 0 ]]; then
+        	if [[ $NUMGROUPS == "0" || $NUMGROUPS == "" ]]; then
                 	K8S_GROUPNAME=none
- 			echo "No groups found"
-		exit 1
-		elif [[ $NUMGROUPS == 1 ]]; then
+ 			echo "No groups found. Please join a group in Canvas."
+			exit 1
+		elif [[ $NUMGROUPS == "1" ]]; then
 			K8S_GROUPNAME=$( echo "$JSON" | jq -r '.teams[0].teamName' )
 		else
 			echo "$0: You are a member of $NUMGROUPS groups.  Please specify your desired group as the second argument on the command line"
@@ -48,15 +47,12 @@ EOM
 
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-if [ "$#" -eq 1 ] && [ $1 == 'create' ]; then
+if [ "$#" -ge 1 ] && [ $1 == 'create' ]; then
         get_gid
-        echo "Launching with gid $K8S_GID"
 	JUPYTER_TOKEN=$(openssl rand -hex 16)
 	# Keeping this for 3. We cannot go beyond 3
 	NUM_WORKERS=3
 	cat $BASEDIR/spark-cluster-group.yaml.template | sed -e "s/\$JUPYTER_TOKEN/$JUPYTER_TOKEN/" -e "s/\$NUM_WORKERS/$NUM_WORKERS/" -e "s/\$K8S_GID/$K8S_GID/" > $BASEDIR/spark-cluster.yaml
-	cat $BASEDIR/spark-cluster.yaml
-	exit 0
 	echo $JUPYTER_TOKEN > $BASEDIR/jupyter_token
 	status=$(cat $BASEDIR/spark-cluster.yaml | kubectl create -f - 2>&1 | grep Error)
 	if [[ "$status" == *"Error"* ]]; then
