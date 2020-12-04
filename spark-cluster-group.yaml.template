@@ -58,7 +58,7 @@ spec:
             claimName: teams
       securityContext:
         runAsUser: $K8S_UID
-        runAsGroup: $K8S_GID
+        runAsGroup: 100
         fsGroup: $K8S_GID
 ---
 kind: Service
@@ -149,7 +149,7 @@ spec:
             claimName: teams
       securityContext:
         runAsUser: $K8S_UID
-        runAsGroup: $K8S_GID
+        runAsGroup: 100
         fsGroup: $K8S_GID
 ---
 kind: Service
