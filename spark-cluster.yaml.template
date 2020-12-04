@@ -1,0 +1,165 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spark-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: spark-master
+  template:
+    metadata:
+      labels:
+        component: spark-master
+    spec:
+      hostname: spark-master
+      containers:
+        - name: spark-master
+          image: scnakandala/dsc102-pa2-spark:latest
+          imagePullPolicy: Always
+          env:
+            - name: JUPYTER_TOKEN
+              value: $JUPYTER_TOKEN
+          command: ["/spark-master"]
+          ports:
+            - containerPort: 7077
+            - containerPort: 8080
+            - containerPort: 4040
+            - containerPort: 20002
+            - containerPort: 50002
+            - containerPort: 60002
+            - containerPort: 60003
+            - containerPort: 60004
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: 2
+            requests:
+              memory: "4Gi"
+              cpu: 2
+          volumeMounts:
+            - name: dsc102-pa3-datasets
+              mountPath: /dsc102-pa3-public
+              subPath: "dsc102-fa20-public"
+              readOnly: true
+            - name: home
+              mountPath: /home
+      volumes:
+        - name: dsc102-pa3-datasets
+          persistentVolumeClaim:
+            claimName: dsmlp-datasets-nfs
+        - name: home
+          persistentVolumeClaim:
+            claimName: home-nfs
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: spark-master
+spec:
+  ports:
+    - name: webui
+      port: 8080
+      targetPort: 8080
+    - name: spark
+      port: 7077
+      targetPort: 7077
+    - name: sparkui
+      port: 4040
+      targetPort: 4040
+    - name: driverport
+      port: 20002
+      targetPort: 20002
+    - name: blockmgrport
+      port: 50002
+      targetPort: 50002
+    - name: fileserverport
+      port: 60002
+      targetPort: 60002
+    - name: broadcastport
+      port: 60003
+      targetPort: 60003
+    - name: replicaport
+      port: 60004
+      targetPort: 60004
+  selector:
+    component: spark-master
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spark-worker
+spec:
+  replicas: $NUM_WORKERS
+  selector:
+    matchLabels:
+      component: spark-worker
+  template:
+    metadata:
+      labels:
+        component: spark-worker
+    spec:
+      containers:
+        - name: spark-worker
+          image: scnakandala/dsc102-pa2-spark:latest
+          imagePullPolicy: Always
+          command: ["/spark-worker"]
+          ports:
+            - containerPort: 8081
+            - containerPort: 30002
+            - containerPort: 40002
+            - containerPort: 50002
+            - containerPort: 60002
+            - containerPort: 60003
+            - containerPort: 60004
+          resources:
+            limits:
+              memory: "20Gi"
+              cpu: 2
+            requests:
+              memory: "20Gi"
+              cpu: 2
+          volumeMounts:
+            - name: dsc102-pa3-datasets
+              mountPath: /dsc102-pa3-public
+              subPath: "dsc102-fa20-public"
+              readOnly: true
+            - name: home
+              mountPath: /home
+      volumes:
+        - name: dsc102-pa3-datasets
+          persistentVolumeClaim:
+            claimName: dsmlp-datasets-nfs
+        - name: home
+          persistentVolumeClaim:
+            claimName: home-nfs
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: spark-worker
+spec:
+  ports:
+    - name: webui
+      port: 8081
+      targetPort: 8081
+    - name: workerport
+      port: 30002
+      targetPort: 30002
+    - name: executorport
+      port: 40002
+      targetPort: 40002
+    - name: blockmgr
+      port: 50002
+      targetPort: 50002
+    - name: fileserverport
+      port: 60002
+      targetPort: 60002
+    - name: broadcastport
+      port: 60003
+      targetPort: 60003
+    - name: replicaport
+      port: 60004
+      targetPort: 60004
+  selector:
+    component: spark-worker
