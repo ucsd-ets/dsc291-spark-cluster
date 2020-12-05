@@ -15,7 +15,8 @@ spec:
       hostname: spark-master
       containers:
         - name: spark-master
-          image: scnakandala/dsc102-pa2-spark:latest
+          image: ucsdets/spark-notebook:latest
+#          image: scnakandala/dsc102-pa2-spark:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: JUPYTER_TOKEN
@@ -109,7 +110,8 @@ spec:
     spec:
       containers:
         - name: spark-worker
-          image: scnakandala/dsc102-pa2-spark:latest
+          image: ucsdets/spark-notebook:latest
+#          image: scnakandala/dsc102-pa2-spark:latest
           imagePullPolicy: IfNotPresent
           command: ["/spark-worker"]
           ports:
