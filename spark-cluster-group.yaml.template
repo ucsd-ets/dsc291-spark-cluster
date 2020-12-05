@@ -21,6 +21,8 @@ spec:
           env:
             - name: JUPYTER_TOKEN
               value: $JUPYTER_TOKEN
+            - name: HOME
+              value: /home
           command: ["/spark-master"]
           ports:
             - containerPort: 7077
