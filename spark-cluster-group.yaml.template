@@ -49,6 +49,8 @@ spec:
               mountPath: /home
             - name: teams
               mountPath: /teams
+            - name: teams
+              mountPath: /home/teams
       volumes:
         - name: dsc102-pa3-datasets
           persistentVolumeClaim:
