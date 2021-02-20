@@ -1,5 +1,5 @@
 #!/bin/bash
-
+K8S_GROUPNAME=$2
 . /software/common64/dsmlp/bin/kubevars.sh
 
 # sets K8S_GID
