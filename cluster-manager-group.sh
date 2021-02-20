@@ -52,7 +52,7 @@ if [ "$#" -ge 1 ] && [ $1 == 'create' ]; then
 	JUPYTER_TOKEN=$(openssl rand -hex 16)
 	# Keeping this for 3. We cannot go beyond 3
 	NUM_WORKERS=3
-	cat $BASEDIR/spark-cluster-group.yaml.template | sed -e "s/\$JUPYTER_TOKEN/$JUPYTER_TOKEN/" -e "s/\$NUM_WORKERS/$NUM_WORKERS/" -e "s/\$K8S_GID/$K8S_GID/"  -e "s/\$K8S_UID/$K8S_UID/" > $BASEDIR/spark-cluster.yaml
+	cat $BASEDIR/spark-cluster-group.yaml.template | sed -e "s/\$JUPYTER_TOKEN/$JUPYTER_TOKEN/" -e "s/\$NUM_WORKERS/$NUM_WORKERS/" -e "s/\$K8S_GID/$K8S_GID/"  -e "s/\$K8S_UID/$K8S_UID/" -e "s/\$K8S_USERNAME/$K8S_USERNAME/" > $BASEDIR/spark-cluster.yaml
 	echo $JUPYTER_TOKEN > $BASEDIR/jupyter_token
 	status=$(cat $BASEDIR/spark-cluster.yaml | kubectl create -f - 2>&1 | grep Error)
 	if [[ "$status" == *"Error"* ]]; then

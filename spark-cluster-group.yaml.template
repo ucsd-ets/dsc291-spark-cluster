@@ -15,7 +15,7 @@ spec:
       hostname: spark-master
       containers:
         - name: spark-master
-          image: ucsdets/spark-notebook:latest
+          image: ucsdets/spark-notebook@sha256:fcc133c9860db1ee14e183305f41f053e1be80537a8d8ecb7debd9de58e247f3
 #          image: scnakandala/dsc102-pa2-spark:latest
           imagePullPolicy: IfNotPresent
           env:
@@ -23,6 +23,9 @@ spec:
               value: $JUPYTER_TOKEN
             - name: HOME
               value: /home
+# https://stackoverflow.com/questions/42072638/spark-submit-how-to-set-the-user-name
+            - name: SPARK_USER
+              value: $K8S_USERNAME
           command: ["/spark-master"]
           ports:
             - containerPort: 7077
@@ -114,10 +117,14 @@ spec:
     spec:
       containers:
         - name: spark-worker
-          image: ucsdets/spark-notebook:latest
+          image: ucsdets/spark-notebook@sha256:fcc133c9860db1ee14e183305f41f053e1be80537a8d8ecb7debd9de58e247f3
 #          image: scnakandala/dsc102-pa2-spark:latest
           imagePullPolicy: IfNotPresent
           command: ["/spark-worker"]
+          env:
+            # https://stackoverflow.com/questions/42072638/spark-submit-how-to-set-the-user-name
+            - name: SPARK_USER
+              value: $K8S_USERNAME
           ports:
             - containerPort: 8081
             - containerPort: 30002
