@@ -12,6 +12,7 @@ spec:
       labels:
         component: spark-master
     spec:
+      priorityClassName: normal
       hostname: spark-master
       containers:
         - name: spark-master

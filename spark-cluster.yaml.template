@@ -12,6 +12,7 @@ spec:
       labels:
         component: spark-master
     spec:
+      priorityClassName: normal
       hostname: spark-master
       containers:
         - name: spark-master
@@ -99,6 +100,7 @@ spec:
       labels:
         component: spark-worker
     spec:
+      priorityClassName: normal
       containers:
         - name: spark-worker
           image: scnakandala/dsc102-pa2-spark:latest
