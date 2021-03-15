@@ -13,7 +13,7 @@ spec:
         component: spark-master
     spec:
       activeDeadlineSeconds: 86400
-      priorityClassName: Normal
+      priorityClassName: normal
       hostname: spark-master
       containers:
         - name: spark-master
