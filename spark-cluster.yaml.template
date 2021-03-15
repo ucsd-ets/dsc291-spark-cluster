@@ -12,6 +12,7 @@ spec:
       labels:
         component: spark-master
     spec:
+      restartPolicy: Never
       activeDeadlineSeconds: 86400
       priorityClassName: normal
       hostname: spark-master
@@ -101,6 +102,7 @@ spec:
       labels:
         component: spark-worker
     spec:
+      restartPolicy: Never
       activeDeadlineSeconds: 86400
       priorityClassName: normal
       containers:
