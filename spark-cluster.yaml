@@ -20,7 +20,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: JUPYTER_TOKEN
-              value: 1ca5f58c85b63e17c75a60f399c08213
+              value: eb4c348a6e0c8b26ba3f68d6210f0c39
           command: ["/spark-master"]
           ports:
             - containerPort: 7077
@@ -93,7 +93,7 @@ kind: Deployment
 metadata:
   name: spark-worker
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       component: spark-worker
