@@ -105,8 +105,8 @@ spec:
       priorityClassName: normal
       containers:
         - name: spark-worker
-          image: scnakandala/dsc102-pa2-spark:latest
-          imagePullPolicy: Always
+          image: ucsdets/spark-master:latest
+          imagePullPolicy: IfNotPresent
           command: ["/spark-worker"]
           ports:
             - containerPort: 8081

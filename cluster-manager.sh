@@ -1,5 +1,5 @@
 #!/bin/bash
-
+exec > >(tee -i cluster-manager.log)
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ "$#" -eq 1 ] && [ $1 == 'create' ]; then
 	JUPYTER_TOKEN=$(openssl rand -hex 16)

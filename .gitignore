@@ -1,2 +1,3 @@
+*.log
 jupyter_token
 port_forwarding
