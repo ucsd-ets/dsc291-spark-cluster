@@ -1,3 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: passwd
+data:
+  passwd: |
+    bin:x:2:2:bin:/bin:/usr/sbin/nologin
+    sys:x:3:3:sys:/dev:/usr/sbin/nologin
+    sync:x:4:65534:sync:/bin:/bin/sync
+    games:x:5:60:games:/usr/games:/usr/sbin/nologin
+    man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+    lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+    mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+    news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+    uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+    proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+    www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+    backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+    list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+    irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+    gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+    nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+    systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false
+    systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false
+    systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+    systemd-bus-proxy:x:103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false
+    _apt:x:104:65534::/nonexistent:/bin/false
+    messagebus:x:105:107::/var/run/dbus:/bin/false
+    spark:x:1000:1000::/home/spark:
+    wuykimpang:x:77818:77818::/home/wuykimpang
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -12,15 +43,25 @@ spec:
       labels:
         component: spark-master
     spec:
+      volumes:
+      - name: passwd
+        configMap:
+          name: passwd
       priorityClassName: normal
       hostname: spark-master
       containers:
         - name: spark-master
+          volumeMounts:
+          - name: passwd
+            mountPath: /etc/passwd
+            subPath: passwd
+          securityContext:
+            runAsUser: 77818
           image: ucsdets/spark-master:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: JUPYTER_TOKEN
-              value: a46f1d2942ef210b1f7a1c44425bde14
+              value: 0b4412aaafc07113da183255da552d0c
           command: ["/spark-master"]
           ports:
             - containerPort: 7077
@@ -38,22 +79,6 @@ spec:
             requests:
               memory: "4Gi"
               cpu: 2
-          volumeMounts:
-            - name: home
-              mountPath: /home
-            - mountPath: /srv/nbgrader/exchange
-              name: nbgrader
-              subPath: DSC291_SP21_A00/exchange
-            - mountPath: /etc/jupyter/nbgrader_config.py
-              name: nbgrader
-              subPath: DSC291_SP21_A00/config/nbgrader_config.py
-      volumes:
-        - name: home
-          persistentVolumeClaim:
-            claimName: home-nfs
-        - name: nbgrader
-          persistentVolumeClaim:
-            claimName: nbgrader
 ---
 kind: Service
 apiVersion: v1
@@ -107,6 +132,8 @@ spec:
         - name: spark-worker
           image: ucsdets/spark-master:latest
           imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1000
           command: ["/spark-worker"]
           ports:
             - containerPort: 8081
@@ -123,13 +150,6 @@ spec:
             requests:
               memory: "20Gi"
               cpu: 2
-          volumeMounts:
-            - name: home
-              mountPath: /home
-      volumes:
-        - name: home
-          persistentVolumeClaim:
-            claimName: home-nfs
 ---
 kind: Service
 apiVersion: v1
