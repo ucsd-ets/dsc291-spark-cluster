@@ -130,10 +130,14 @@ spec:
       priorityClassName: normal
       containers:
         - name: spark-worker
+          volumeMounts:
+          - name: passwd
+            mountPath: /etc/passwd
+            subPath: passwd
           image: ucsdets/spark-master:latest
           imagePullPolicy: IfNotPresent
           securityContext:
-            runAsUser: 1000
+            runAsUser: $USER_ID
           command: ["/spark-worker"]
           ports:
             - containerPort: 8081
@@ -150,6 +154,10 @@ spec:
             requests:
               memory: "20Gi"
               cpu: 2
+      volumes:
+      - name: passwd
+        configMap:
+          name: passwd
 ---
 kind: Service
 apiVersion: v1
