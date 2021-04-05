@@ -47,6 +47,9 @@ spec:
       - name: passwd
         configMap:
           name: passwd
+      - name: dsc291-datasets
+        persistentVolumeClaim:
+          claimName: dsmlp-datasets
       priorityClassName: normal
       hostname: spark-master
       containers:
@@ -55,6 +58,9 @@ spec:
           - name: passwd
             mountPath: /etc/passwd
             subPath: passwd
+          - name: dsc291-datasets
+            mountPath: /datasets/ds291-sp21-A00-public
+            subPath: "ds291-sp21-A00-public"
           securityContext:
             runAsUser: $USER_ID
           image: ucsdets/spark-master:latest
@@ -134,6 +140,9 @@ spec:
           - name: passwd
             mountPath: /etc/passwd
             subPath: passwd
+          - name: dsc291-datasets
+            mountPath: /datasets/ds291-sp21-A00-public
+            subPath: "ds291-sp21-A00-public"
           image: ucsdets/spark-master:latest
           imagePullPolicy: IfNotPresent
           securityContext:
@@ -158,6 +167,9 @@ spec:
       - name: passwd
         configMap:
           name: passwd
+      - name: dsc291-datasets
+        persistentVolumeClaim:
+          claimName: dsmlp-datasets
 ---
 kind: Service
 apiVersion: v1
