@@ -63,7 +63,7 @@ spec:
             subPath: "ds291-sp21-A00-public"
           securityContext:
             runAsUser: $USER_ID
-          image: ucsdets/spark-master:latest
+          image: ucsdets/spark-master:2021.3.1
           imagePullPolicy: Always
           env:
             - name: JUPYTER_TOKEN
@@ -143,7 +143,7 @@ spec:
           - name: dsc291-datasets
             mountPath: /datasets/ds291-sp21-A00-public
             subPath: "ds291-sp21-A00-public"
-          image: ucsdets/spark-master:latest
+          image: ucsdets/spark-master:2021.3.1
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: $USER_ID
