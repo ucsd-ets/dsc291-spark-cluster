@@ -29,7 +29,7 @@ data:
     spark:x:1000:1000::/home/spark:
     $USERNAME:x:$USER_ID:$USER_ID::/home/$USERNAME
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spark-master
@@ -119,7 +119,7 @@ spec:
   selector:
     component: spark-master
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spark-worker
