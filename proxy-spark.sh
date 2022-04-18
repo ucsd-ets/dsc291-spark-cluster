@@ -10,7 +10,8 @@ fi
 RAW_MASTER_POD=$(kubectl get pods -n $1 | grep master)
 
 if [ $? -eq 1 ]; then
-	echo "Spark master isn't running! Please contact leader $1"
+	echo "Spark master isn't running or you may not have access to it! Please contact leader $1 if you do have access and its not running, otherwise please contact your TA"
+	exit 1
 fi
 
 MASTER_POD=$(echo $RAW_MASTER_POD | cut -d ' ' -f1)
