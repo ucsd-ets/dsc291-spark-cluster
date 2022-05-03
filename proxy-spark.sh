@@ -23,7 +23,6 @@ sleep 2
 temp=$(cat port_forwarding | wc -l)
 while [ $temp != 3 ]
 	do
-		echo "here"
 	    sync && sleep 2
             temp=$(cat port_forwarding | wc -l)
   	done
